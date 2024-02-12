@@ -42,7 +42,7 @@ const App = () => {
     console.log("Forecast:", foreCast);
   }, [currentWeather, foreCast]);
   
-  
+
 
 
   return (
