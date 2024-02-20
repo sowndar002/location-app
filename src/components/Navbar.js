@@ -1,8 +1,7 @@
-  import React, { useState, useEffect } from "react";
+  import React, { useState } from "react";
   import { CiLocationOn } from "react-icons/ci";
   import { AsyncPaginate } from "react-select-async-paginate";
   import { GEO_API_URL, geoApiOptions } from "../api";
-  import Currentweather from "./current-weather/Currentweather";
 
   const Navbar = ({ handleSearchChange,  location, handleFetchWeather, setLocation}) => {
     const [search, setSearch] = useState(null);

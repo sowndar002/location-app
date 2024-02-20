@@ -3,17 +3,17 @@
   import Currentweather from "./components/current-weather/Currentweather";
   import { WEATHER_API_KEY, WEATHER_API_URL } from "./api";
   import { useEffect } from "react";
-  import Forecast from "./components/forecast/Forecast";
   import useGeoLocation from "./Hook/useGeoLocation";
   import Spinningcomponent from "./components/Spinningcomponent";
 
   const App = () => {
-    const [currentWeather, setCurrentWeather] = useState(null);
-    const [foreCast, setForeCast] = useState(null);
-    const [isloading, setIsLoading] = useState(true);
-    const [location, setLocation] = useState(null);
-    const [error, setError] = useState(null);
-    const { coordinates } = useGeoLocation();
+const [currentWeather, setCurrentWeather] = useState(null);
+const [foreCast, setForeCast] = useState(null);
+const [isloading, setIsLoading] = useState(true);
+const [location, setLocation] = useState(null);
+const [error, setError] = useState(null);
+const { coordinates } = useGeoLocation();
+
     
     useEffect(() => {
       if (coordinates && coordinates.lat !== null && coordinates.lon !== null) {
@@ -84,5 +84,4 @@
       </div>
     );
   };
-
   export default App;
