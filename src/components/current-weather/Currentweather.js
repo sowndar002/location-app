@@ -2,12 +2,19 @@ import React from "react";
 import { TbRefresh } from "react-icons/tb";
 import { IoSunnyOutline } from 'react-icons/io5';
 import { BsCloudMoon } from 'react-icons/bs';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet'
+
+const icon = L.icon({
+  iconUrl: './loc.png',
+  iconSize: [38,38],
+})
 
 const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-
-const Currentweather = ({ cdata, fdata }) => {
+const Currentweather = ({ cdata, fdata, latitude, longitude }) => {
+  console.log(cdata)
   const dayInAWeek = new Date().getDay();
   const forecastDays = WEEK_DAYS.slice(dayInAWeek).concat(WEEK_DAYS.slice(0, dayInAWeek));
 
@@ -15,7 +22,7 @@ const Currentweather = ({ cdata, fdata }) => {
     <div>
       <div className="flex m-4 mt-8 flex-col gap-4 items-center md:flex-row lg:flex-row xl:flex-row">
         <div className="border-2 p-8 w-full md:w-5/6 lg:w-1/2 xl:w-1/3 flex flex-col items-center rounded-3xl relative shadow-lg shadow-grey-300 ">
-          <p className="text-blue-500 text-2xl  font-bold">{cdata.city}</p>
+          <p className="text-blue-500 text-2xl  font-bold">{cdata.name}</p>
           <p className="text-6xl  text-blue-500 font-bold">
             {Math.round(cdata.main.temp)}&deg;C
           </p>
@@ -32,7 +39,7 @@ const Currentweather = ({ cdata, fdata }) => {
                   Feel Temp.
                 </td>
                 <td className="p-2 bg-blue-500 text-xl text-white font-semibold ">
-                  {cdata.main.temp}&deg;C
+                  {Math.round(cdata.main.temp)}&deg;C
                 </td>
               </tr>
               <tr>
@@ -64,7 +71,7 @@ const Currentweather = ({ cdata, fdata }) => {
                   Max Temp.
                 </td>
                 <td className="p-2 bg-blue-500 text-xl text-white font-semibold ">
-                  {cdata.main.temp_max}
+                  {Math.round(cdata.main.temp_max)}&deg;C
                 </td>
               </tr>
               <tr>
@@ -72,24 +79,25 @@ const Currentweather = ({ cdata, fdata }) => {
                   Min Temp.
                 </td>
                 <td className="p-2 bg-blue-500 text-xl text-white font-semibold ">
-                  {cdata.main.temp_min}
+                  {Math.round(cdata.main.temp_min)}&deg;C
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="rounded-md">
-        <iframe
-            title="Google Maps"
-            src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30767581.986373156!2d60.934105966142084!3d19.72078202199745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30635ff06b92b791%3A0xd78c4fa1854213a6!2sIndia!5e0!3m2!1sen!2sin!4v1707752500965!5m2!1sen!2sin`}
-            style={{ border: 0 }}
-            allowFullScreen=""
-            loading="lazy"
-            width="full"
-            height="full"
-            referrerPolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
+        <div className="rounded-md border-2 w-full sm:w-1/2 h-60" >
+        <MapContainer  key={`${latitude}-${longitude}`} center={[latitude, longitude]} zoom={13}  style={{width: '100%' , height: '100%',  overflow: 'hidden'}}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={[latitude, longitude]} icon={icon} >
+            <Popup>
+              {cdata.name}
+            </Popup>
+          </Marker>
+        </MapContainer>
+      </div>
         
       </div>
       <div className="flex justify-center rounded-lg gap-4 p-4 m-2 flex-wrap">
@@ -99,20 +107,20 @@ const Currentweather = ({ cdata, fdata }) => {
           className="border-2 rounded-md shadow-lg shadow-grey-500 p-4 items-center justify-center"
         >
           <div key={idx} className="flex items-center flex-col">
-            <p className="border-2 bg-blue-500 rounded-lg p-2 text-white font-bold">
+            <p className="border-2 bg-blue-500 rounded-lg p-3 text-white font-bold">
               {forecastDays[idx]}
             </p>
           </div>
           <div className="text-blue-500 font-semibold flex flex-col  items-center ">
             <p className="flex gap-2 items-center text-lg">
               <IoSunnyOutline />
-              {item.main.temp_max}&deg;C
+              {Math.round(item.main.temp_max)}&deg;C
             </p>
             <p className="flex gap-2 items-center text-lg">
               <BsCloudMoon />
-              {item.main.temp_min}&deg;C
+              {Math.round(item.main.temp_min)}&deg;C
             </p>
-            <p className="text-lg">Clear</p>
+            <p className="text-lg">{item.weather[0].description}</p>
           </div>
         </div>
       ))}
